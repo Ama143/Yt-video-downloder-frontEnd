@@ -9,7 +9,7 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
     status.textContent = "Processing...";
 
     try {
-        const response = await fetch('https://yt-video-downloader-backend.onrender.com/download', {
+        const response = await fetch('https://yt-video-downloader-backendppy.onrender.com/download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ document.getElementById('transcript-form').addEventListener('submit', async (e) 
     status.textContent = "Fetching transcript...";
 
     try {
-        const response = await fetch('https://yt-video-downloader-backend.onrender.com/transcript', {
+        const response = await fetch('https://yt-video-downloader-backendppy.onrender.com/transcript', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
