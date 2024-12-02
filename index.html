@@ -9,26 +9,36 @@
 <body>
     <div class="container">
         <h1>Video Section Downloader</h1>
-        <form id="download-form">
-            <label for="url">Video URL:</label>
-            <input type="url" id="url" name="url" required placeholder="Enter video URL">
+        <form id="download-form" class="form">
+            <div class="form-group">
+                <label for="url">Video URL:</label>
+                <input type="url" id="url" name="url" required placeholder="Enter video URL">
+            </div>
 
-            <label for="start">Start Time (HH:MM:SS):</label>
-            <input type="text" id="start" name="start" required placeholder="00:00:00">
+            <div class="form-group">
+                <label for="start">Start Time (HH:MM:SS):</label>
+                <input type="text" id="start" name="start" required placeholder="00:00:00">
+            </div>
 
-            <label for="end">End Time (HH:MM:SS):</label>
-            <input type="text" id="end" name="end" required placeholder="00:00:00">
+            <div class="form-group">
+                <label for="end">End Time (HH:MM:SS):</label>
+                <input type="text" id="end" name="end" required placeholder="00:00:00">
+            </div>
 
-            <button type="submit">Download</button>
+            <button type="submit" class="btn">Download</button>
         </form>
-        <div id="status"></div>
+        <div id="status" class="status"></div>
     </div>
-    <form id="transcript-form">
-    <label for="transcript-url">Transcript Video URL:</label>
-    <input type="url" id="transcript-url" name="transcript-url" required placeholder="Enter video URL">
-    <button type="submit">Get Transcript</button>
-</form>
-<div id="transcript-status"></div>
+    <div class="container">
+        <form id="transcript-form" class="form">
+            <div class="form-group">
+                <label for="transcript-url">Transcript Video URL:</label>
+                <input type="url" id="transcript-url" name="transcript-url" required placeholder="Enter video URL">
+            </div>
+            <button type="submit" class="btn">Get Transcript</button>
+        </form>
+        <div id="transcript-status" class="status"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
