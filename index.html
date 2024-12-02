@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Section Downloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Video Section Downloader</h1>
+        <form id="download-form">
+            <label for="url">Video URL:</label>
+            <input type="url" id="url" name="url" required placeholder="Enter video URL">
+
+            <label for="start">Start Time (HH:MM:SS):</label>
+            <input type="text" id="start" name="start" required placeholder="00:00:00">
+
+            <label for="end">End Time (HH:MM:SS):</label>
+            <input type="text" id="end" name="end" required placeholder="00:00:00">
+
+            <button type="submit">Download</button>
+        </form>
+        <div id="status"></div>
+    </div>
+    <form id="transcript-form">
+    <label for="transcript-url">Transcript Video URL:</label>
+    <input type="url" id="transcript-url" name="transcript-url" required placeholder="Enter video URL">
+    <button type="submit">Get Transcript</button>
+</form>
+<div id="transcript-status"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
