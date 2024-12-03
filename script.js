@@ -5,11 +5,12 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
     const start = document.getElementById('start').value;
     const end = document.getElementById('end').value;
     const status = document.getElementById('status');
+    const backendUrl = "https://yt-video-downloader-backendppy.onrender.com"
 
     status.textContent = "Processing...";
 
     try {
-        const response = await fetch('https://yt-video-downloader-backend.onrender.com/', {
+        const response = await fetch(`${backendUrl}/download`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
