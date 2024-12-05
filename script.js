@@ -15,6 +15,7 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ url, start, end }),
         });
 
@@ -43,6 +44,7 @@ document.getElementById('transcript-form').addEventListener('submit', async (e) 
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ url }),
         });
 
