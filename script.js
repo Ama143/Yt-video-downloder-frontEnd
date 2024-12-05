@@ -5,31 +5,34 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
     const start = document.getElementById('start').value;
     const end = document.getElementById('end').value;
     const status = document.getElementById('status');
-    const backendUrl = "https://yt-video-downloader-backendppy.onrender.com"
 
     status.textContent = "Processing...";
 
     try {
-        const response = await fetch(`${backendUrl}/download`, {
+        const response = await fetch('https://yt-video-downloader-backendppy.onrender.com/download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             credentials: 'include',
+            mode: 'cors',
             body: JSON.stringify({ url, start, end }),
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            status.textContent = `Download Success: ${data.message}`;
-        } else {
-            status.textContent = `Error: ${data.error}`;
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        status.textContent = `Download Success: ${data.message}`;
     } catch (error) {
-        status.textContent = `Request Failed: ${error.message,error}`;
+        console.error('Download error:', error);
+        status.textContent = `Error: ${error.message}`;
     }
 });
+
 document.getElementById('transcript-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -39,23 +42,26 @@ document.getElementById('transcript-form').addEventListener('submit', async (e) 
     status.textContent = "Fetching transcript...";
 
     try {
-        const response = await fetch('https://yt-video-downloader-backend.onrender.com/transcript', {
+        const response = await fetch('https://yt-video-downloader-backendppy.onrender.com/transcript', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             credentials: 'include',
+            mode: 'cors',
             body: JSON.stringify({ url }),
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            status.innerHTML = `Transcript available: <a href="${data.transcript_url}" target="_blank">Download Transcript</a>`;
-        } else {
-            status.textContent = `Error: ${data.error}`;
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        status.innerHTML = `Transcript available: <a href="${data.transcript_url}" target="_blank">Download Transcript</a>`;
     } catch (error) {
-        status.textContent = `Request Failed: ${error.message}`;
+        console.error('Transcript error:', error);
+        status.textContent = `Error: ${error.message}`;
     }
 });
