@@ -1,35 +1,30 @@
-// Add this function at the start
-async function checkYouTubeAuth() {
-    try {
-        const response = await fetch('https://www.youtube.com', {
-            credentials: 'include'
-        });
-        const cookies = document.cookie;
-        return cookies.includes('SAPISID') || cookies.includes('SID') || cookies.includes('SSID');
-    } catch (error) {
-        return false;
-    }
+function checkYouTubeCookies() {
+    // Check for common YouTube authentication cookies
+    const cookies = document.cookie;
+    return cookies.includes('SAPISID') || 
+           cookies.includes('SID') || 
+           cookies.includes('SSID') || 
+           cookies.includes('APISID');
 }
 
 document.getElementById('download-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const status = document.getElementById('status');
 
-    // Check YouTube authentication first
-    const isAuthenticated = await checkYouTubeAuth();
-    if (!isAuthenticated) {
+    // Check for YouTube cookies locally
+    if (!checkYouTubeCookies()) {
         status.innerHTML = `
             <div class="error-message">
                 Please sign in to YouTube first! 
                 <a href="https://accounts.google.com/signin/v2/identifier?service=youtube" 
                    target="_blank">Sign in to YouTube</a>
-                and then try again.
+                in a new tab, then come back and try again.
+                <br><br>
+                <small>Tip: After signing in, refresh this page before trying again.</small>
             </div>
         `;
         return;
     }
-
-
 
     const videoUrl = document.getElementById('videoUrl').value;
     const format = document.getElementById('format').value;
