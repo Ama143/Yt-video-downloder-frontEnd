@@ -1,11 +1,40 @@
+// Add this function at the start
+async function checkYouTubeAuth() {
+    try {
+        const response = await fetch('https://www.youtube.com', {
+            credentials: 'include'
+        });
+        const cookies = document.cookie;
+        return cookies.includes('SAPISID') || cookies.includes('SID') || cookies.includes('SSID');
+    } catch (error) {
+        return false;
+    }
+}
+
 document.getElementById('download-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const status = document.getElementById('status');
+
+    // Check YouTube authentication first
+    const isAuthenticated = await checkYouTubeAuth();
+    if (!isAuthenticated) {
+        status.innerHTML = `
+            <div class="error-message">
+                Please sign in to YouTube first! 
+                <a href="https://accounts.google.com/signin/v2/identifier?service=youtube" 
+                   target="_blank">Sign in to YouTube</a>
+                and then try again.
+            </div>
+        `;
+        return;
+    }
+
+
 
     const videoUrl = document.getElementById('videoUrl').value;
     const format = document.getElementById('format').value;
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
-    const status = document.getElementById('status');
 
     status.textContent = "Processing...";
 
@@ -22,7 +51,8 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
                 videoUrl,
                 format,
                 startTime: startTime || null,
-                endTime: endTime || null
+                endTime: endTime || null,
+                recaptchaToken
             }),
         });
 
@@ -40,6 +70,7 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
     } catch (error) {
         console.error('Download error:', error);
         status.textContent = `Error: ${error.message}`;
+        grecaptcha.reset();  // Reset reCAPTCHA on error
     }
 });
 
