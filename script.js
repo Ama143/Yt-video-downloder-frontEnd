@@ -1,39 +1,38 @@
-function checkYouTubeCookies() {
-    // Check for common YouTube authentication cookies
-    const cookies = document.cookie;
-    return cookies.includes('SAPISID') || 
-           cookies.includes('SID') || 
-           cookies.includes('SSID') || 
-           cookies.includes('APISID');
-}
-
 document.getElementById('download-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const status = document.getElementById('status');
-
-    // Check for YouTube cookies locally
-    if (!checkYouTubeCookies()) {
-        status.innerHTML = `
-            <div class="error-message">
-                Please sign in to YouTube first! 
-                <a href="https://accounts.google.com/signin/v2/identifier?service=youtube" 
-                   target="_blank">Sign in to YouTube</a>
-                in a new tab, then come back and try again.
-                <br><br>
-                <small>Tip: After signing in, refresh this page before trying again.</small>
-            </div>
-        `;
-        return;
-    }
-
-    const videoUrl = document.getElementById('videoUrl').value;
-    const format = document.getElementById('format').value;
-    const startTime = document.getElementById('startTime').value;
-    const endTime = document.getElementById('endTime').value;
-
-    status.textContent = "Processing...";
+    status.textContent = "Checking YouTube authentication...";
 
     try {
+        // Check auth status first
+        const authResponse = await fetch('https://yt-video-downloader-backendppy.onrender.com/check-auth', {
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+            }
+        });
+
+        const authData = await authResponse.json();
+        if (!authData.authenticated) {
+            status.innerHTML = `
+                <div class="error-message">
+                    Please sign in to YouTube first! 
+                    <a href="https://accounts.google.com/signin/v2/identifier?service=youtube" 
+                       target="_blank">Sign in to YouTube</a>
+                    in a new tab, then come back and try again.
+                    <br><br>
+                    <small>Tip: After signing in, refresh this page before trying again.</small>
+                </div>
+            `;
+            return;
+        }
+
+        status.textContent = "Processing download...";
+        const videoUrl = document.getElementById('videoUrl').value;
+        const format = document.getElementById('format').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
         const response = await fetch('https://yt-video-downloader-backendppy.onrender.com/download', {
             method: 'POST',
             headers: {
@@ -41,13 +40,11 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
                 'Accept': 'application/json',
             },
             credentials: 'include',
-            mode: 'cors',
             body: JSON.stringify({ 
                 videoUrl,
                 format,
                 startTime: startTime || null,
-                endTime: endTime || null,
-                recaptchaToken
+                endTime: endTime || null
             }),
         });
 
@@ -63,9 +60,8 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
             status.textContent = "Download failed: No download URL received";
         }
     } catch (error) {
-        console.error('Download error:', error);
+        console.error('Error:', error);
         status.textContent = `Error: ${error.message}`;
-        grecaptcha.reset();  // Reset reCAPTCHA on error
     }
 });
 
