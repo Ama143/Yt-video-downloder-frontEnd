@@ -1,9 +1,10 @@
 document.getElementById('download-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const url = document.getElementById('url').value;
-    const start = document.getElementById('start').value;
-    const end = document.getElementById('end').value;
+    const videoUrl = document.getElementById('videoUrl').value;
+    const format = document.getElementById('format').value;
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
     const status = document.getElementById('status');
 
     status.textContent = "Processing...";
@@ -17,7 +18,12 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
             },
             credentials: 'include',
             mode: 'cors',
-            body: JSON.stringify({ url, start, end }),
+            body: JSON.stringify({ 
+                videoUrl,
+                format,
+                startTime: startTime || null,
+                endTime: endTime || null
+            }),
         });
 
         if (!response.ok) {
@@ -26,7 +32,11 @@ document.getElementById('download-form').addEventListener('submit', async (e) =>
         }
 
         const data = await response.json();
-        status.textContent = `Download Success: ${data.message}`;
+        if (data.downloadUrl) {
+            status.innerHTML = `<a href="${data.downloadUrl}" class="download-link">Download your file</a>`;
+        } else {
+            status.textContent = "Download failed: No download URL received";
+        }
     } catch (error) {
         console.error('Download error:', error);
         status.textContent = `Error: ${error.message}`;
